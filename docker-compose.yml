@@ -1,0 +1,122 @@
+version: '3.9'
+
+services:
+
+  frontend:
+    build: 
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    ports:
+      - "${FRONTEND_PORT}:4000"
+
+  backend:
+    build: 
+      context: .
+      dockerfile: ./backend/Dockerfile
+    environment:
+      REDIS_URL: "redis://redis:${REDIS_PORT}"
+      MINIO_ENDPOINT: "http://minio:${MINIO_PORT}"
+      MINIO_ACCESS_KEY: "${MINIO_ROOT_USER}"
+      MINIO_SECRET_KEY: "${MINIO_ROOT_PASSWORD}"
+      KAFKA_BOOTSTRAP_SERVERS: "kafka:${KAFKA_INTERNAL_PORT}"
+      ELASTICSEARCH_URL: "http://elasticsearch:${ELASTICSEARCH_PORT}"
+      ADMIN_USER_USERNAME: "${ADMIN_USER_USERNAME}"
+      ADMIN_USER_PASSWORD: "${ADMIN_USER_PASSWORD}"
+    ports:
+      - "${BACKEND_PORT}:8080"
+    depends_on:
+      - xtdb
+      - redis
+      - minio
+      - kafka
+      - elasticsearch
+
+  model-utils:
+    build: 
+      context: .
+      dockerfile: ./model-utils/Dockerfile
+    ports:
+      - "${MODEL_UTILS_PORT}:8000"
+
+  xtdb:
+    image: ghcr.io/xtdb/xtdb:2.0.0-beta6.6
+    ports:
+      - "3000:3000"
+      - "5432:5432"
+      - "8080:8080"
+    volumes:
+      - xtdb-data:/var/lib/xtdb
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - redis-storage:/data
+
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
+    ports:
+      - "${MINIO_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9001"
+    environment:
+      MINIO_ROOT_USER: "${MINIO_ROOT_USER}"
+      MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD}"
+    volumes:
+      - minio-storage:/data
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_PORT}
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "${ZOOKEEPER_PORT}:2181"
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
+      - zookeeper-log:/var/lib/zookeeper/log
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo srvr | nc localhost 2181 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - "${KAFKA_BROKER_PORT}:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:${ZOOKEEPER_PORT}"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka:${KAFKA_INTERNAL_PORT},EXTERNAL://localhost:${KAFKA_BROKER_PORT}"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+    volumes:
+      - kafka-storage:/var/lib/kafka/data
+
+
+  elasticsearch:
+    image: elasticsearch:8.13.4
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: false
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+    ports:
+      - "${ELASTICSEARCH_PORT}:9200"
+    volumes:
+      - elasticsearch-storage:/usr/share/elasticsearch/data
+
+volumes:
+  xtdb-data:
+  redis-storage:
+  minio-storage:
+  kafka-storage:
+  zookeeper-data:
+  zookeeper-log:
+  elasticsearch-storage:

@@ -1,0 +1,33 @@
+# Node modules
+node_modules/
+
+# Shadow-cljs output
+.shadow-cljs/
+
+# Compiled JavaScript
+public/js/
+public/assets/js/
+dist/
+
+# CSS build artifacts
+public/css/main.css
+public/css/*.css
+public/assets/css/
+
+# Local REPL history
+.shadow-cljs/repl-history
+
+# Editor files
+*.swp
+*~
+.DS_Store
+.idea/
+.vscode/
+
+# Environment files (local dev secrets)
+.env
+.env.*
+
+# Logs
+log/
+*.log
