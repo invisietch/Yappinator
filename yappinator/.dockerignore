@@ -1,0 +1,6 @@
+.git
+.github
+.gitignore
+target/
+node_modules/
+.env

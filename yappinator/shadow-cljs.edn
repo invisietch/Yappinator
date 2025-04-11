@@ -1,0 +1,15 @@
+{:source-paths ["src"]
+
+ :dev-http {4000 "public"}
+
+ :dependencies [[reagent "1.2.0"]
+                [re-frame "1.4.3"]
+                [thheller/shadow-cljs "2.28.3"]
+                [re-frame/re-frame "1.4.3"]
+                [day8.re-frame/http-fx "0.2.4"]
+                [cljs-ajax/cljs-ajax "0.8.4"]]
+
+ :builds {:app {:target :browser
+                :output-dir "public/js"
+                :asset-path "/js"
+                :modules {:main {:init-fn yappinator.frontend.core/init}}}}}

@@ -1,0 +1,46 @@
+# Compiled JVM classes
+*.class
+
+# Generated jar files and artifacts
+*.jar
+*.war
+*.ear
+
+# Clojure CLI & local dependencies
+.cpcache/
+.clj-kondo/.cache/
+.nrepl-port
+
+# Local REPL history
+.repl-history
+.lsp/
+
+# Editor specific files
+*.swp
+*~
+.DS_Store
+.idea/
+.vscode/
+
+# Test and coverage reports
+target/
+coverage/
+
+# Environment files (local dev secrets)
+.env
+.env.*
+
+# logs
+log/
+*.log
+
+# Node modules
+node_modules/
+
+# Shadow-cljs output
+.shadow-cljs/
+
+# Compiled JavaScript
+public/js/
+public/assets/js/
+dist/
