@@ -1,15 +1,20 @@
-FROM node:23-alpine
+FROM node:20-alpine AS build
 
 WORKDIR /app
-
 RUN apk add --no-cache openjdk17-jre-headless
-
 COPY yappinator .
 
-RUN npm install
+ARG API_URL=http://localhost:8080
+ENV SHADOW_ENV='{"API_URL":"'"$API_URL"'"}'
 
+RUN npm install
+RUN npx tailwindcss -i ./src/styles.css -o ./public/css/styles.css --minify
 RUN npx shadow-cljs release app
 
-EXPOSE 4000
+RUN rm public/index.html
+RUN mv public/index.release.html ./public/index.html
 
-CMD ["npx", "shadow-cljs", "server"]
+FROM nginx:alpine
+COPY --from=build /app/public /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

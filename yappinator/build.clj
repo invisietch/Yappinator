@@ -11,9 +11,9 @@
 
 (defn uberjar [_]
   (clean nil)
-  (b/copy-dir {:src-dirs ["src"] :target-dir class-dir})
+  (b/copy-dir {:src-dirs ["src/yappinator/backend" "src/yappinator/common"] :target-dir class-dir})
   (b/compile-clj {:basis (b/create-basis {:project "deps.edn"})
-                  :src-dirs ["src"]
+                  :src-dirs ["src/yappinator/backend" "src/yappinator/common"]
                   :class-dir class-dir})
   (b/uber {:class-dir class-dir
            :uber-file uber-file

@@ -1,7 +1,24 @@
 {
   "dependencies": {
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "shadow-cljs": "^2.28.23"
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "karma": "^6.4.4",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-cljs-test": "^0.1.0",
+    "nock": "^14.0.3",
+    "postcss": "^8.5.3",
+    "shadow-cljs": "^2.28.23",
+    "source-map-support": "^0.5.21",
+    "tailwindcss": "^3.4.17",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "scripts": {
+    "watch:css": "npx tailwindcss -i ./src/styles.css -o ./public/css/main.css --watch",
+    "build:css": "npx tailwindcss -i ./src/styles.css -o ./public/css/main.css --minify",
+    "dev": "npm run watch:css & npx shadow-cljs watch app",
+    "release": "npm run build:css && npx shadow-cljs release app"
   }
 }
