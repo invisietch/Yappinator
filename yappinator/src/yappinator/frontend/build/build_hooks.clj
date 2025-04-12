@@ -8,7 +8,7 @@
 
 (defn replace-script-names [html asset-path modules]
   (reduce
-   (fn [html {:keys [module-id output-name] :as mod}]
+   (fn [html {:keys [module-id output-name]}]
      (let [script-path (str asset-path "/" (name module-id) ".js")]
        (str/replace html script-path (str asset-path "/" output-name))))
    html

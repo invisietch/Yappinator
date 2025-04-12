@@ -1,6 +1,5 @@
 (ns yappinator.frontend.core
-  (:require [reagent.core :as r]
-            [reagent.dom.client :as rdom]
+  (:require [reagent.dom.client :as rdom]
             [re-frame.core :as rf]
             [day8.re-frame.http-fx]
 
@@ -25,4 +24,5 @@
   (rf/dispatch-sync [:initialize-db])
   (rdom/render root [main-view]))
 
+#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn init [] (mount-root))

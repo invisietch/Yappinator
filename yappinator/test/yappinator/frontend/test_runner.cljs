@@ -1,7 +1,5 @@
-;; In a test support namespace
-(ns yappinator.test-helpers
-  (:require
-   [re-frame.core :as rf]))
+(ns yappinator.frontend.test-runner
+  (:require [re-frame.core :as rf]))
 
 ;; Register subscriptions to capture effects
 (rf/reg-sub :http-xhrio-captured (fn [db _] (:last-http db)))

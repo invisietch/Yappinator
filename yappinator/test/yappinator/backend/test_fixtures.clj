@@ -1,6 +1,5 @@
 (ns yappinator.backend.test-fixtures
-  (:require [clojure.test :refer :all]
-            [xtdb.api :as xt]
+  (:require [xtdb.api :as xt]
             [xtdb.node :as xtn]
             [yappinator.backend.db :as db]))
 

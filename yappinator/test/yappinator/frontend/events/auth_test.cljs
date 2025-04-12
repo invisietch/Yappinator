@@ -1,8 +1,9 @@
 (ns yappinator.frontend.events.auth-test
   (:require
-   [cljs.test :refer-macros [deftest is testing use-fixtures]]
+   [cljs.test :refer-macros [deftest is use-fixtures]]
    [re-frame.core :as rf]
    [re-frame.subs :as rs]
+   [re-frame.db :refer [app-db]]
    [day8.re-frame.test :as rf-test]
    [clojure.string :as str]
    [yappinator.frontend.events.auth]
@@ -30,7 +31,7 @@
 (deftest login-event-test
   (rf-test/run-test-sync
    (rf/dispatch [:auth/login "user" "pass"])
-   (let [http-opts (:last-http @re-frame.db/app-db)]
+   (let [http-opts (:last-http @app-db)]
      (is (true? @(rf/subscribe [:auth/loading?])))
      (is (= :post (:method http-opts)))
      (is (str/includes? (:uri http-opts) "/api/auth/login")))))

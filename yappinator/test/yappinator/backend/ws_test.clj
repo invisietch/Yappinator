@@ -1,5 +1,5 @@
 (ns yappinator.backend.ws-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [yappinator.backend.ws :as ws]
             [yappinator.backend.test-fixtures :refer [with-xtdb-node]]))
 

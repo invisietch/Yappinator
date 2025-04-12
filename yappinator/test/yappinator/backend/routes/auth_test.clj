@@ -1,5 +1,5 @@
 (ns yappinator.backend.routes.auth-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [yappinator.backend.models.users :as users]
             [yappinator.backend.routes.auth :as auth]
             [yappinator.backend.auth.jwt :as jwt]

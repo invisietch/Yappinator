@@ -1,6 +1,6 @@
 (ns yappinator.frontend.events.chat-test
   (:require
-   [cljs.test :refer-macros [deftest is testing use-fixtures]]
+   [cljs.test :refer-macros [deftest is use-fixtures]]
    [re-frame.core :as rf]
    [day8.re-frame.test :as rf-test]
    [yappinator.frontend.events.chat]

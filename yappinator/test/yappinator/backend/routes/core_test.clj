@@ -1,5 +1,5 @@
 (ns yappinator.backend.routes.core-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
             [yappinator.backend.routes.core :refer [app]]
             [ring.mock.request :as mock]
             [muuntaja.core :as m]))
