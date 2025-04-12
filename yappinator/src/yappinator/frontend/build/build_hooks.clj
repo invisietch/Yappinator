@@ -1,29 +1,29 @@
 (ns yappinator.frontend.build.build-hooks
   (:require
-    [shadow.build :as build]
-    [shadow.build.closure :as closure]
-    [shadow.cljs.util :as util]
-    [clojure.java.io :as io]
-    [clojure.string :as str]))
+   [shadow.build :as build]
+   [shadow.build.closure :as closure]
+   [shadow.cljs.util :as util]
+   [clojure.java.io :as io]
+   [clojure.string :as str]))
 
 (defn replace-script-names [html asset-path modules]
   (reduce
-    (fn [html {:keys [module-id output-name] :as mod}]
-      (let [script-path (str asset-path "/" (name module-id) ".js")]
-        (str/replace html script-path (str asset-path "/" output-name))))
-    html
-    modules))
+   (fn [html {:keys [module-id output-name] :as mod}]
+     (let [script-path (str asset-path "/" (name module-id) ".js")]
+       (str/replace html script-path (str asset-path "/" output-name))))
+   html
+   modules))
 
 (comment
   (replace-script-names
-    "<script src=\"/js/foo.js\"></script>"
-    "/js"
-    [{:module-id :foo :output-name "foo.123.js"}])
+   "<script src=\"/js/foo.js\"></script>"
+   "/js"
+   [{:module-id :foo :output-name "foo.123.js"}])
 
   (replace-script-names
-    "<script src=\"/js/foo.js\"></script>"
-    "/no-replace"
-    [{:module-id :foo :output-name "foo.123.js"}]))
+   "<script src=\"/js/foo.js\"></script>"
+   "/no-replace"
+   [{:module-id :foo :output-name "foo.123.js"}]))
 
 (defn copy-file
   {:shadow.build/stage :flush}
@@ -44,12 +44,12 @@
       (let [html
             (-> (slurp source-file)
                 (cond->
-                  (and (= :release mode)
-                       (:module-hash-names config))
+                 (and (= :release mode)
+                      (:module-hash-names config))
                   (replace-script-names
-                    (:asset-path config "/js")
-                    (or (::closure/modules build-state)
-                        (:build-modules build-state)))))]
+                   (:asset-path config "/js")
+                   (or (::closure/modules build-state)
+                       (:build-modules build-state)))))]
 
         (io/make-parents target-file)
         (spit target-file html)

@@ -5,7 +5,7 @@
 (defonce node
   (xtc/start-client "http://xtdb:3000"))
 
-(defn submit-tx 
+(defn submit-tx
   ([ops] (xt/submit-tx node ops))
   ([ops opts] (xt/submit-tx node ops opts)))
 
