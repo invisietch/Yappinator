@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+echo "Running tests before push..."
+cd yappinator
+
+echo "Running Clojure tests..."
+clojure -X:test
+
+echo "Running ClojureScript tests..."
+npx shadow-cljs compile test && node out/test.js
+
+echo "All tests passed! Proceeding with push..."

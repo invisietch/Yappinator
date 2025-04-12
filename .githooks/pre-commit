@@ -1,0 +1,27 @@
+#!/bin/sh
+set -e
+
+echo "Running pre-commit fixes..."
+
+cljfmt fix
+
+TARGET_DIR="yappinator/"
+FILES=$(git diff --cached --name-only --diff-filter=ACM | \
+        grep -E "^${TARGET_DIR}.*\.(clj|cljs|edn)$")
+
+[ -z "$FILES" ] && exit 0
+
+for file in $FILES; do
+  [ -f "$file" ] || continue
+
+  last_char=$(tail -c 1 "$file" | od -An -t u1)
+
+  if [ "$last_char" != "10" ] && [ -n "$last_char" ]; then
+    echo >> "$file"
+    git add "$file"
+  fi
+done
+
+clj-kondo --lint yappinator/src yappinator/test
+
+echo "Pre-commit checks passed!"
