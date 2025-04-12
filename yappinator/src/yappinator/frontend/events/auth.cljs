@@ -19,15 +19,32 @@
 (rf/reg-event-fx
  :auth/login-success
  (fn [{:keys [db]} [_ {:keys [token]}]]
-   {:db (-> db
-            (assoc-in [:auth :token] token)
-            (assoc-in [:auth :loading?] false)
-            (assoc-in [:auth :error] nil))
-    :dispatch [:websocket/init token]}))
+   {:db (assoc-in db [:auth :token] token)
+    :fx [[:dispatch [:websocket/init token]]
+         [:dispatch [:auth/set-token-local-storage token]]]}))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  :auth/login-failure
- (fn [db [_ error]]
-   (-> db
-       (assoc-in [:auth :error] (:status-text error))
-       (assoc-in [:auth :loading?] false))))
+ (fn [{:keys [db]} [_ error]]
+   {:db (-> db
+            (assoc-in [:auth :error] (:status-text error))
+            (assoc-in [:auth :loading?] false))}))
+
+(rf/reg-event-fx
+ :auth/set-token-local-storage
+ (fn [_ [_ token]]
+   (.setItem js/localStorage "auth-token" token)
+   {}))
+
+(rf/reg-event-fx
+ :auth/logout
+ (fn [{:keys [db]} _]
+   {:db (assoc-in db [:auth :token] nil)
+    :fx [[:dispatch [:auth/remove-token-local-storage]]]}))
+
+(rf/reg-event-fx
+ :auth/remove-token-local-storage
+ (fn [_ _]
+   (.removeItem js/localStorage "auth-token")
+   {}))
+

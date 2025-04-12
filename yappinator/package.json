@@ -1,7 +1,9 @@
 {
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "timeago.js": "^4.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",

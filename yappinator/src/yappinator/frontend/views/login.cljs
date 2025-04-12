@@ -2,7 +2,7 @@
   (:require [re-frame.core :as rf]
             [reagent.core :as r]))
 
-(defn login-panel []
+(defn login-view []
   (let [username (r/atom "")
         password (r/atom "")
         loading? (rf/subscribe [:auth/loading?])

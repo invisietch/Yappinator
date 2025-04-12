@@ -42,7 +42,9 @@ node_modules/
 
 # Compiled JavaScript
 public/js/
+public/css/
 public/assets/js/
+public/index.release.html
 dist/
 
 # Compiled JavaScript Tests
