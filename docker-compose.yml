@@ -19,6 +19,7 @@ services:
       dockerfile: ./yappinator/Dockerfile.backend
     environment:
       REDIS_URL: "redis://redis:${REDIS_PORT}"
+      KAFKA_BROKER_PORT: "${KAFKA_BROKER_PORT}"
       MINIO_ENDPOINT: "http://minio:${MINIO_PORT}"
       MINIO_ACCESS_KEY: "${MINIO_ROOT_USER}"
       MINIO_SECRET_KEY: "${MINIO_ROOT_PASSWORD}"

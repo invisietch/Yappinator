@@ -6,7 +6,8 @@
                 [re-frame "1.4.3"]
                 [day8.re-frame/http-fx "0.2.4"]
                 [cljs-ajax/cljs-ajax "0.8.4"]
-                [day8.re-frame/test "0.1.5"]]
+                [day8.re-frame/test "0.1.5"]
+                [metosin/malli "0.15.0"]]
 
  :builds {:app {:target :browser
                 :output-dir "public/js"
@@ -25,3 +26,5 @@
                  :foreign-libs [{:file "node_modules/xmlhttprequest/lib/XMLHttpRequest.js"
                  :provides ["ajax.xml-http-request"]
                  :module-type :commonjs}]}}}
+
+

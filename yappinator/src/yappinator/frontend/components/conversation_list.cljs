@@ -1,6 +1,5 @@
 (ns yappinator.frontend.components.conversation-list
   (:require [re-frame.core :as rf]
-            [yappinator.frontend.icons :as icons]
             [yappinator.frontend.components.tag-filter :refer [tag-filter-dropdown]]))
 
 (defn conversation-list []
@@ -17,3 +16,6 @@
         {:class (if (= id selected-conv) "bg-gruvbox-dark3" "")
          :on-click #(rf/dispatch [:conversation/select id])}
         title])]))
+
+
+
