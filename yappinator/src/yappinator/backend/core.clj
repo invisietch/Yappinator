@@ -9,7 +9,7 @@
     (let [ready? (try
                    (users/find-by-username "healthcheck")
                    true
-                   (catch Exception e
+                   (catch Exception _
                      (log/info "🔄 Waiting for XTDB...")
                      false))]
       (if ready?

@@ -24,5 +24,5 @@
   (rf/dispatch-sync [:initialize-db])
   (rdom/render root [main-view]))
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn init [] (mount-root))
+
