@@ -22,5 +22,7 @@ done
 
 git add $FILES
 
+clj-kondo --lint yappinator/src yappinator/test
+
 echo "Pre-commit checks passed!"
 exit 0
