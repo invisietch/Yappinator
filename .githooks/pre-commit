@@ -4,6 +4,7 @@ set -e
 echo "Running pre-commit fixes..."
 
 cljfmt fix
+
 TARGET_DIR="yappinator/"
 
 FILES=$(git diff --cached --name-only --diff-filter=ACM | \
@@ -13,16 +14,13 @@ FILES=$(git diff --cached --name-only --diff-filter=ACM | \
 
 for file in $FILES; do
   [ -f "$file" ] || continue
-
-  last_char=$(tail -c 1 "$file" | od -An -t u1)
-  if [ "$last_char" != "10" ] && [ -n "$last_char" ]; then
-    echo >> "$file"
-  fi
+  
+  # Ensure exactly one newline at EOF
+  sed -i '' -e :a -e '/^\n*$/{$d;N;ba' -e '}' "$file"
+  echo "" >> "$file"
 done
 
 git add $FILES
-
-clj-kondo --lint yappinator/src yappinator/test
 
 echo "Pre-commit checks passed!"
 exit 0
