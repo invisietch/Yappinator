@@ -2,8 +2,7 @@
   (:require [taoensso.sente :as sente]
             [taoensso.sente.server-adapters.http-kit :refer [get-sch-adapter]]
             [yappinator.backend.auth.jwt :as jwt]
-            [yappinator.backend.kafka.producer :as kafka]
-            [yappinator.backend.utils.ids :as ids]))
+            [yappinator.backend.handlers.character :as character]))
 
 (defn user-id-fn [ring-req]
   (let [token (get-in ring-req [:params :token])]
@@ -27,19 +26,15 @@
 
 (defmulti event-msg-handler :id)
 
-(defmethod event-msg-handler :character/create
-  [{:keys [uid event]}]
-  (let [{character-data :data} event
-        character-id (ids/next-id)
-        payload (assoc character-data :character-id character-id :owner-id uid)]
-    (kafka/enqueue! "character-create" payload)
-    (chsk-send! uid [:character/create-ack {:character-id character-id
-                                            :status :acknowledged}])))
+(defmethod event-msg-handler :character/create [ev-msg]
+  (character/handle-create-character (assoc ev-msg :send-fn chsk-send!)))
 
 (defn start-router! []
   (sente/start-server-chsk-router!
    (:ch-recv sente-system)
    (wrap-auth event-msg-handler)))
+
+
 
 
 

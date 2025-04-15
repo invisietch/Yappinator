@@ -1,9 +1,7 @@
 (ns yappinator.backend.kafka.producer
   (:require [jackdaw.client :as jc]
-            [clojure.data.json :as json]))
-
-(def producer-config
-  {"bootstrap.servers" (str "kafka:" (System/getenv "KAFKA_BROKER_PORT"))})
+            [cheshire.core :as json]
+            [yappinator.backend.kafka.config :refer [producer-config]]))
 
 (def producer (delay (jc/producer producer-config)))
 
@@ -11,8 +9,10 @@
   [topic payload]
   (let [record {:topic-name topic
                 :key (str (:character-id payload))
-                :value (json/write-str payload)}]
+                :value (json/generate-string payload)}]
     @(jc/produce! @producer record)))
+
+
 
 
 
